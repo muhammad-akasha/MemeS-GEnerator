@@ -143,7 +143,7 @@ const MemeGeneratorPage = ({ searchParams }: GeneratorProps) => {
             className="btn btn-outline btn-primary mb-4"
             disabled={loading}
           >
-            {loading ? "Creating Meme..." : "GenerateMeme"}
+            {loading ? "Creating Meme..." : "Generate Meme"}
           </button>
         </div>
       </div>
