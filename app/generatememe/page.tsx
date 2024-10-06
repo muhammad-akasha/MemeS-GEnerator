@@ -85,7 +85,7 @@ const MemeGeneratorPage = ({ searchParams }: GeneratorProps) => {
 
   return (
     <>
-      <h2 className="text-center text-[33px] py-3 text-[#000] font-semibold">
+      <h2 className="text-center text-[22px] sm:text-[33px] py-3 text-[#000] font-semibold">
         Selected Meme Template: {name}
       </h2>
 
@@ -102,7 +102,7 @@ const MemeGeneratorPage = ({ searchParams }: GeneratorProps) => {
 
       {/* Show the generated meme */}
       {memeUrl && (
-        <div className="m-auto w-[500px] border-2 p-3 rounded-md mt-10">
+        <div className="m-auto w-[100%] sm:w-[500px] border-2 p-3 rounded-md mt-10">
           <Image
             width={500}
             height={500}
@@ -124,7 +124,7 @@ const MemeGeneratorPage = ({ searchParams }: GeneratorProps) => {
 
       {/* Meme text input fields */}
       <div>
-        <div className="flex flex-col gap-4 w-[450px] m-auto mt-[70px] shadow-lg p-4 rounded-md">
+        <div className="flex flex-col gap-4 w-[100%] sm:w-[450px] m-auto mt-[70px] shadow-lg p-4 rounded-md">
           <h1 className="text-center text-2xl font-semibold">
             ENTER MEME TEXT
           </h1>
