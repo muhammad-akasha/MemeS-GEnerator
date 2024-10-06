@@ -15,6 +15,7 @@ interface GeneratorProps {
 
 const MemeGeneratorPage = ({ searchParams }: GeneratorProps) => {
   const { url, id, boxCount, name } = searchParams;
+  const [loading, setLoading] = useState<boolean>(false);
   const [inputTexts, setInputTexts] = useState<string[]>([]); // Array to hold the text values for each input
   const [memeUrl, setMemeUrl] = useState<string | null>(null); // State to hold the generated meme URL
   const [downloadUrl, setDownloadUrl] = useState<string | null>(null); // State to hold the blob URL
@@ -34,6 +35,7 @@ const MemeGeneratorPage = ({ searchParams }: GeneratorProps) => {
 
   // Function to generate the meme
   const generateMeme = async () => {
+    setLoading(true);
     try {
       for (let i = 0; i < inputTexts.length; i++) {
         if (inputTexts[i]) {
@@ -66,20 +68,29 @@ const MemeGeneratorPage = ({ searchParams }: GeneratorProps) => {
         const blob = await imageResponse.blob();
         const blobUrl = URL.createObjectURL(blob);
         setDownloadUrl(blobUrl); // Set the blob URL for downloading
+        setLoading(false);
       } else {
         console.error("Error generating meme:", result.error_message); // Log any API errors
       }
     } catch (error) {
       console.error("Fetch error:", error); // Log fetch errors
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Something went wrong while generating the meme. Please try again.",
+      });
     }
+    setLoading(false);
   };
 
   return (
     <>
       <h2 className="text-center text-[33px] py-3 text-[#000] font-semibold">
-        Selected Meme Template : {name}
+        Selected Meme Template: {name}
       </h2>
-      {url && (
+
+      {/* Show the template image */}
+      {url && !memeUrl ? (
         <Image
           className="m-auto shadow-lg p-1"
           src={url}
@@ -87,7 +98,31 @@ const MemeGeneratorPage = ({ searchParams }: GeneratorProps) => {
           height={450}
           alt="memeimg"
         />
+      ) : null}
+
+      {/* Show the generated meme */}
+      {memeUrl && (
+        <div className="m-auto w-[500px] border-2 p-3 rounded-md mt-10">
+          <Image
+            width={500}
+            height={500}
+            src={memeUrl}
+            quality={75}
+            alt={name}
+          />
+          {downloadUrl && (
+            <a
+              href={downloadUrl}
+              download={name}
+              className="btn btn-primary mt-4"
+            >
+              Download Meme
+            </a>
+          )}
+        </div>
       )}
+
+      {/* Meme text input fields */}
       <div>
         <div className="flex flex-col gap-4 w-[450px] m-auto mt-[70px] shadow-lg p-4 rounded-md">
           <h1 className="text-center text-2xl font-semibold">
@@ -100,38 +135,17 @@ const MemeGeneratorPage = ({ searchParams }: GeneratorProps) => {
                 key={index}
                 onChange={(e) => handleInput(index, e.target.value)}
                 placeholder={`Text for box ${index + 1}`}
-                className="input input-bordered input-success w-full mb-2" // Add CSS classes for styling
+                className="input input-bordered input-success w-full mb-2"
               />
             ))}
           <button
             onClick={generateMeme}
             className="btn btn-outline btn-primary mb-4"
+            disabled={loading}
           >
-            Generate Meme
+            {loading ? "Creating Meme..." : "GenerateMeme"}
           </button>
         </div>
-
-        {/* Show the generated meme */}
-        {memeUrl && (
-          <div className="m-auto w-[500px] border-2 p-3 rounded-md mt-10">
-            <Image
-              width={500}
-              height={500}
-              src={memeUrl}
-              quality={75}
-              alt={name}
-            />
-            {downloadUrl && (
-              <a
-                href={downloadUrl}
-                download={name}
-                className="btn btn-primary mt-4"
-              >
-                Download Meme
-              </a>
-            )}
-          </div>
-        )}
       </div>
     </>
   );
