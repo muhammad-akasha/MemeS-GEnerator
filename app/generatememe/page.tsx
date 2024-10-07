@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import Loading from "../loading";
 
 interface GeneratorProps {
   searchParams: {
@@ -85,6 +86,7 @@ const MemeGeneratorPage = ({ searchParams }: GeneratorProps) => {
 
   return (
     <>
+      {loading && <Loading />}
       <h2 className="text-center text-[22px] sm:text-[33px] py-3 text-[#000] font-semibold">
         Selected Meme Template: {name}
       </h2>
